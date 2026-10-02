@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex">
+  <title>Join your family on Ayana</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="site-header"><div class="inner">
+    <a class="brand" href="/">Ayana</a>
+    <nav aria-label="Main navigation"><a href="/privacy/">Privacy</a><a href="/support/">Support</a></nav>
+  </div></header>
+  <main>
+    <p class="eyebrow">You're invited</p>
+    <h1>Join your family on Ayana</h1>
+    <p class="lede">If Ayana is installed, this link opens it. Otherwise install Ayana, sign in with Apple, Google, or email, then enter this code. A family admin approves new people before they can see anything.</p>
+    <section class="card" aria-labelledby="code-heading">
+      <h2 id="code-heading">Your space code</h2>
+      <p id="code" aria-live="polite">Open the full invite link to see your code.</p>
+    </section>
+    <p>Only share this code with people you trust. It never gives access on its own.</p>
+  </main>
+  <footer class="site-footer"><div class="inner"><span>© 2026 Ayana</span><a href="/privacy/">Privacy policy</a></div></footer>
+  <script>
+    // The code stays in this browser: nothing on this page sends it anywhere.
+    (function () {
+      var code = new URLSearchParams(location.search).get('c');
+      if (code && /^[A-Za-z0-9-]{12,20}$/.test(code)) {
+        document.getElementById('code').textContent = code.toUpperCase();
+      }
+    })();
+  </script>
+</body>
+</html>
