@@ -11,6 +11,16 @@ body { margin: 0; }
 a { color: #20624e; text-underline-offset: 0.15em; }
 a:hover { color: #124d3b; }
 a:focus-visible { outline: 3px solid #b86938; outline-offset: 4px; }
+.button {
+  display: inline-block;
+  background: #20624e;
+  color: white;
+  font-weight: 650;
+  text-decoration: none;
+  padding: 0.7rem 1rem;
+  border-radius: 0.6rem;
+}
+.button:hover { background: #124d3b; color: white; }
 
 .site-header, .site-footer {
   background: #eff2e9;

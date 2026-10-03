@@ -6,6 +6,7 @@ Published URLs:
 
 - https://ayana.aaron.software/privacy/
 - https://ayana.aaron.software/support/
+- https://ayana.aaron.software/delete-account/
 
 GitHub Pages serves the root of `main`. The `CNAME` file configures the custom domain. DNS must contain a `CNAME` record for `ayana` pointing to `apex-integration-lab.github.io` (without the repository name). Keep the custom domain in GitHub Pages settings before adding that record. After DNS and the certificate are ready, enable **Enforce HTTPS** in Pages settings.
 
