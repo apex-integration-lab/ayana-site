@@ -7,6 +7,12 @@
   <meta name="robots" content="noindex">
   <title>Join your family on Ayana</title>
   <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    .get { font-size: 1.1rem; padding: 0.9rem 1.4rem; margin: 0.5rem 0.5rem 0.5rem 0; }
+    .steps { color: #41534a; padding-left: 1.2rem; }
+    .code { font-size: 1.4rem; letter-spacing: 0.12em; font-variant-numeric: tabular-nums; }
+    [hidden] { display: none !important; }
+  </style>
 </head>
 <body>
   <header class="site-header"><div class="inner">
@@ -16,21 +22,94 @@
   <main>
     <p class="eyebrow">You're invited</p>
     <h1>Join your family on Ayana</h1>
-    <p class="lede">If Ayana is installed, this link opens it. Otherwise install Ayana, sign in with Apple, Google, or email, then enter this code. A family admin approves new people before they can see anything.</p>
-    <section class="card" aria-labelledby="code-heading">
-      <h2 id="code-heading">Your space code</h2>
-      <p id="code" aria-live="polite">Open the full invite link to see your code.</p>
+
+    <section id="invite" hidden>
+      <p class="lede">Get the app and sign in. Your invite comes along, and a family admin lets you in.</p>
+      <p>
+        <a id="get-ios" class="button get" href="https://testflight.apple.com/join/34ujPnHg" hidden>Get Ayana</a>
+        <a id="get-android" class="button get" href="https://play.google.com/store/apps/details?id=com.aaron.cubby" hidden>Get Ayana</a>
+      </p>
+      <ol class="steps" id="steps-ios" hidden>
+        <li>Ayana is in beta, so Apple's TestFlight app opens first. Install it if asked, then tap <strong>Install</strong> for Ayana.</li>
+        <li>Open Ayana and tap <strong>Allow Paste</strong> so it can pick up your invite.</li>
+        <li>Sign in with Apple, Google, or email.</li>
+      </ol>
+      <ol class="steps" id="steps-android" hidden>
+        <li>Install Ayana from Google Play.</li>
+        <li>Open Ayana and sign in with Google or email.</li>
+      </ol>
+      <p id="desktop" hidden>Open this link on your phone to install Ayana. On a computer you can still get it for
+        <a href="https://testflight.apple.com/join/34ujPnHg">iPhone</a> or
+        <a href="https://play.google.com/store/apps/details?id=com.aaron.cubby">Android</a>.</p>
+      <p><a id="open-app" href="#">Already have Ayana? Open it</a></p>
+      <section class="card" aria-labelledby="code-heading">
+        <h2 id="code-heading">Your space code</h2>
+        <p>If Ayana asks for a code, enter this one:</p>
+        <p class="code" id="code" aria-live="polite"></p>
+      </section>
     </section>
-    <p>Only share this code with people you trust. It never gives access on its own.</p>
+
+    <p id="missing">Open the full invite link to see your code.</p>
+    <p>Only share this invite with people you trust. It never gives access on its own.</p>
   </main>
   <footer class="site-footer"><div class="inner"><span>© 2026 Ayana</span><a href="/privacy/">Privacy policy</a></div></footer>
   <script>
-    // The code stays in this browser: nothing on this page sends it anywhere.
+    // The code stays on this device: this page sends it nowhere. Get Ayana
+    // copies the invite link so the app can pick it up on its first launch,
+    // and the Play link carries it as an install referrer.
     (function () {
-      var code = new URLSearchParams(location.search).get('c');
-      if (code && /^[A-Za-z0-9-]{12,20}$/.test(code)) {
-        document.getElementById('code').textContent = code.toUpperCase();
+      var raw = new URLSearchParams(location.search).get('c');
+      if (!raw || !/^[A-Za-z0-9-]{12,20}$/.test(raw)) return;
+      var code = raw.toUpperCase();
+      var link = 'https://ayana.aaron.software/join/?c=' + encodeURIComponent(code);
+      var $ = function (id) { return document.getElementById(id); };
+
+      $('code').textContent = code;
+      $('missing').hidden = true;
+      $('invite').hidden = false;
+      $('open-app').href = 'com.aaron.cubby://join?c=' + encodeURIComponent(code);
+
+      var ua = navigator.userAgent;
+      var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+      var android = /Android/.test(ua);
+      var play = $('get-android');
+      play.href += '&referrer=' + encodeURIComponent('ayana_join=' + code);
+
+      if (ios) { $('get-ios').hidden = false; $('steps-ios').hidden = false; }
+      else if (android) { play.hidden = false; $('steps-android').hidden = false; }
+      else { $('desktop').hidden = false; }
+
+      function copy() {
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(link).catch(legacyCopy);
+          }
+        } catch (e) {}
+        legacyCopy();
+        return Promise.resolve();
       }
+      function legacyCopy() {
+        var area = document.createElement('textarea');
+        area.value = link;
+        area.setAttribute('readonly', '');
+        area.style.position = 'fixed';
+        area.style.opacity = '0';
+        document.body.appendChild(area);
+        area.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(area);
+      }
+      [$('get-ios'), play].forEach(function (button) {
+        button.addEventListener('click', function (event) {
+          event.preventDefault();
+          var target = button.href;
+          var gone = false;
+          var go = function () { if (!gone) { gone = true; location.href = target; } };
+          // Never leave someone waiting on a clipboard that does not answer.
+          var timer = setTimeout(go, 800);
+          copy().then(go, go);
+        });
+      });
     })();
   </script>
 </body>
