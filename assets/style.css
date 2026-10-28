@@ -48,6 +48,7 @@ a:focus-visible { outline: 3px solid #b86938; outline-offset: 4px; }
 nav { display: flex; gap: 1.2rem; }
 nav a { font-size: 0.94rem; }
 main { max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+.app-icon { display: block; width: 104px; height: 104px; border-radius: 24px; margin-bottom: 1.5rem; }
 h1, h2 { color: #214b3a; line-height: 1.2; letter-spacing: -0.035em; }
 h1 { font-size: clamp(2.3rem, 7vw, 3.7rem); margin: 0 0 0.7rem; }
 h2 { font-size: 1.35rem; margin: 2.4rem 0 0.65rem; }
